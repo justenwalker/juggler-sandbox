@@ -1,0 +1,368 @@
+{
+  "extends": [
+    "default"
+  ],
+  "meta": {
+    "name": "juggler-session",
+    "version": "1.0.0"
+  },
+  "groups": {
+    "include": [
+      "node_runtime",
+      "deny_keychains_macos"
+    ]
+  },
+  "workdir": {
+    "access": "readwrite"
+  },
+  "filesystem": {
+    "read": [
+      "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
+      "/opt/homebrew/bin/gh",
+      "/opt/homebrew/bin/node",
+      "/usr/bin/git",
+      "/usr/local/bin/claude",
+      "/usr/local/bin/juggler",
+      "/usr/local/bin/nono",
+      "/Applications/ChatGPT.app",
+      "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/runtime"
+    ],
+    "read_file": [
+      "/etc/ssl/cert.pem",
+      "/home/test/.CFUserTextEncoding"
+    ],
+    "allow": [
+      "/src/app",
+      "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data",
+      "/home/test/.local/share/juggler-sandbox/identity/claude",
+      "/home/test/.local/share/juggler-sandbox/identity/codex",
+      "/home/test/.local/share/juggler-sandbox/identity/juggler"
+    ],
+    "deny": [
+      "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/control",
+      "/home/test/.local/share/juggler-sandbox/identity/control",
+      "/home/test/.local/state/juggler-sandbox/machine",
+      "/home/test/.ssh",
+      "/home/test/.claude",
+      "/home/test/.codex",
+      "/home/test/.juggler",
+      "/home/test/.config/gh",
+      "/home/test/.kube",
+      "/home/test/.aws",
+      "/home/test/.docker",
+      "/home/test/Library/Keychains",
+      "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/home/Library/Keychains",
+      "/var/run/docker.sock"
+    ],
+    "bypass_protection": [
+      "/home/test/.local/share/juggler-sandbox/identity/claude",
+      "/home/test/.local/share/juggler-sandbox/identity/codex",
+      "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/home/.config/gh"
+    ],
+    "suppress_save_prompt": [
+      "/"
+    ]
+  },
+  "environment": {
+    "allow_vars": [
+      "PATH",
+      "USER",
+      "LOGNAME",
+      "LANG",
+      "TERM",
+      "JUGGLER_INGRESS_SECRET",
+      "JUGGLER_SESSION_TOKEN",
+      "JUGGLER_SUPERVISOR_ADDR",
+      "JUGGLER_SUPERVISOR_TOKEN",
+      "JUGGLER_SUPERVISOR_SESSION"
+    ],
+    "set_vars": {
+      "CLAUDE_CONFIG_DIR": "/home/test/.local/share/juggler-sandbox/identity/claude",
+      "CODEX_HOME": "/home/test/.local/share/juggler-sandbox/identity/codex",
+      "GH_CONFIG_DIR": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/home/.config/gh",
+      "GIT_CONFIG_GLOBAL": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/runtime/gitconfig",
+      "GIT_CONFIG_NOSYSTEM": "1",
+      "GIT_TERMINAL_PROMPT": "0",
+      "HOME": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/home",
+      "JUGGLER_CONFIG_DIR": "/home/test/.local/share/juggler-sandbox/identity/juggler",
+      "JUGGLER_ENGINE_HOST": "node",
+      "JUGGLER_LOG_DIR": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/logs",
+      "SHELL": "/bin/bash",
+      "TMPDIR": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/tmp",
+      "XDG_CACHE_HOME": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/home/.cache",
+      "XDG_CONFIG_HOME": "/home/test/.local/state/juggler-sandbox/sessions/06ef2310/data/home/.config"
+    }
+  },
+  "network": {
+    "allow_domain": [
+      "api.anthropic.com",
+      "claude.ai",
+      "claude.com",
+      "platform.claude.com",
+      "console.anthropic.com",
+      "auth.openai.com",
+      "chatgpt.com",
+      "github.com",
+      "api.github.com"
+    ],
+    "open_port": [],
+    "custom_credentials": {
+      "github_api": {
+        "upstream": "https://api.github.com",
+        "credential_key": "file:///home/test/.local/share/juggler-sandbox/identity/control/github-token",
+        "env_var": "GH_TOKEN",
+        "inject_header": "Authorization",
+        "credential_format": "token {}",
+        "endpoint_rules": [
+          {
+            "method": "GET",
+            "path": "/repos/plotly/dash-enterprise"
+          },
+          {
+            "method": "GET",
+            "path": "/repos/plotly/dash-enterprise/**"
+          },
+          {
+            "method": "POST",
+            "path": "/repos/plotly/dash-enterprise/pulls"
+          },
+          {
+            "method": "PATCH",
+            "path": "/repos/plotly/dash-enterprise/pulls/*"
+          },
+          {
+            "method": "POST",
+            "path": "/repos/plotly/dash-enterprise/issues/*/comments"
+          },
+          {
+            "method": "POST",
+            "path": "/graphql"
+          }
+        ]
+      },
+      "github_git": {
+        "upstream": "https://github.com",
+        "credential_key": "file:///home/test/.local/share/juggler-sandbox/identity/control/github-git-basic",
+        "env_var": "GITHUB_GIT_TOKEN",
+        "inject_mode": "basic_auth",
+        "endpoint_rules": [
+          {
+            "method": "GET",
+            "path": "/plotly/dash-enterprise.git/info/refs"
+          },
+          {
+            "method": "POST",
+            "path": "/plotly/dash-enterprise.git/git-upload-pack"
+          },
+          {
+            "method": "POST",
+            "path": "/plotly/dash-enterprise.git/git-receive-pack"
+          }
+        ]
+      }
+    },
+    "credentials": [
+      "github_api",
+      "github_git"
+    ],
+    "tls_intercept": {
+      "ca_env_vars": [
+        "CODEX_CA_CERTIFICATE"
+      ]
+    }
+  },
+  "credential_providers": {
+    "claude_code": {
+      "type": "oauth_capture",
+      "token_endpoints": [
+        {
+          "host": "https://platform.claude.com",
+          "path": "/v1/oauth/token",
+          "response_fields": [
+            {
+              "path": "access_token",
+              "kind": "opaque",
+              "format": "sk-ant-oat01-{}"
+            },
+            {
+              "path": "refresh_token",
+              "kind": "opaque"
+            }
+          ],
+          "request_body": "json",
+          "request_nonce_fields": [
+            "access_token",
+            "refresh_token"
+          ]
+        }
+      ],
+      "api_hosts": [
+        "https://api.anthropic.com"
+      ],
+      "credential_store": {
+        "type": "file_json",
+        "path": "/home/test/.local/share/juggler-sandbox/identity/claude/.credentials.json",
+        "phantom_fields": [
+          "claudeAiOauth.accessToken",
+          "claudeAiOauth.refreshToken"
+        ]
+      }
+    },
+    "codex_openai": {
+      "type": "oauth_capture",
+      "token_endpoints": [
+        {
+          "host": "https://auth.openai.com",
+          "path": "/api/accounts/deviceauth/token",
+          "response_fields": [
+            {
+              "path": "access_token",
+              "kind": "opaque"
+            },
+            {
+              "path": "refresh_token",
+              "kind": "opaque"
+            },
+            {
+              "path": "id_token",
+              "kind": "jwt"
+            }
+          ],
+          "request_body": "auto",
+          "request_nonce_fields": [
+            "refresh_token"
+          ]
+        },
+        {
+          "host": "https://auth.openai.com",
+          "path": "/oauth/token",
+          "response_fields": [
+            {
+              "path": "access_token",
+              "kind": "opaque"
+            },
+            {
+              "path": "refresh_token",
+              "kind": "opaque"
+            },
+            {
+              "path": "id_token",
+              "kind": "jwt"
+            }
+          ],
+          "request_body": "auto",
+          "request_nonce_fields": [
+            "refresh_token"
+          ]
+        }
+      ],
+      "api_hosts": [
+        "https://chatgpt.com",
+        "https://auth.openai.com"
+      ],
+      "credential_store": {
+        "type": "file_json",
+        "path": "/home/test/.local/share/juggler-sandbox/identity/codex/auth.json",
+        "phantom_fields": [
+          "tokens.id_token",
+          "tokens.access_token",
+          "tokens.refresh_token"
+        ]
+      }
+    }
+  },
+  "credential_routes": [
+    {
+      "name": "claude_oauth",
+      "provider": "claude_code",
+      "endpoint_policy": {
+        "default": {
+          "decision": "deny"
+        },
+        "allow": [
+          {
+            "method": "POST",
+            "path": "/v1/messages"
+          },
+          {
+            "method": "POST",
+            "path": "/v1/messages/count_tokens"
+          },
+          {
+            "method": "GET",
+            "path": "/api/oauth/profile"
+          },
+          {
+            "method": "GET",
+            "path": "/api/oauth/claude_cli/roles"
+          },
+          {
+            "method": "GET",
+            "path": "/api/oauth/account/settings"
+          },
+          {
+            "method": "GET",
+            "path": "/api/oauth/usage"
+          },
+          {
+            "method": "GET",
+            "path": "/api/claude_code/policy_limits"
+          },
+          {
+            "method": "GET",
+            "path": "/api/hello"
+          }
+        ]
+      }
+    },
+    {
+      "name": "codex_chatgpt",
+      "provider": "codex_openai",
+      "endpoint_policy": {
+        "default": {
+          "decision": "deny"
+        },
+        "allow": [
+          {
+            "method": "POST",
+            "path": "/backend-api/codex/responses"
+          },
+          {
+            "method": "GET",
+            "path": "/backend-api/codex/responses"
+          },
+          {
+            "method": "GET",
+            "path": "/backend-api/codex/models"
+          },
+          {
+            "method": "GET",
+            "path": "/backend-api/codex/usage"
+          },
+          {
+            "method": "GET",
+            "path": "/backend-api/wham/usage"
+          },
+          {
+            "method": "POST",
+            "path": "/api/accounts/deviceauth/usercode"
+          },
+          {
+            "method": "POST",
+            "path": "/api/accounts/deviceauth/token"
+          },
+          {
+            "method": "POST",
+            "path": "/oauth/token"
+          }
+        ]
+      },
+      "upgrades": [
+        {
+          "origin": "https://chatgpt.com",
+          "path": "/backend-api/codex/responses"
+        }
+      ]
+    }
+  ]
+}
